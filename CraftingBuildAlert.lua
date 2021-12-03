@@ -1,7 +1,7 @@
-AlwaysBeCrafting = {
-    displayName = "Always Be Crafting",
-    shortName = "ABC",
-    name = "AlwaysBeCrafting",
+CraftingBuildAlert = {
+    displayName = "Crafting Build Alert",
+    shortName = "CBA",
+    name = "CraftingBuildAlert",
     version = "0.0.1",
     logger = nil,
 	libZone = nil,
@@ -16,7 +16,7 @@ AlwaysBeCrafting = {
 	},
 }
 
-function AlwaysBeCrafting:GetBuildNames()
+function CraftingBuildAlert:GetBuildNames()
     local buildNames = {}
 	table.insert(buildNames, "--None")
 	
@@ -27,7 +27,7 @@ function AlwaysBeCrafting:GetBuildNames()
     return buildNames
 end
 
-function AlwaysBeCrafting:GetBuildIDs()
+function CraftingBuildAlert:GetBuildIDs()
     local buildIDs = {}
 	table.insert(buildIDs, 0)
 	
@@ -38,7 +38,7 @@ function AlwaysBeCrafting:GetBuildIDs()
     return buildIDs
 end
 
-function AlwaysBeCrafting:IsOnCraftingBuild()
+function CraftingBuildAlert:IsOnCraftingBuild()
     if (self.savedCharVariables.craftBuildID ~= nil) and
 	   (self.savedCharVariables.craftBuildID ~= 0) and
 	   (self.savedCharVariables.currentBuildID ~= nil) then
@@ -48,7 +48,7 @@ function AlwaysBeCrafting:IsOnCraftingBuild()
 end
 
 
-function AlwaysBeCrafting:CreateMenu()
+function CraftingBuildAlert:CreateMenu()
 
     local panelData = {
         type = "panel",
@@ -61,7 +61,7 @@ function AlwaysBeCrafting:CreateMenu()
     }
     LibAddonMenu2:RegisterAddonPanel(self.displayName, panelData)
     
-    local debugOptionName = GetString(ALWAYS_BE_CRAFTING_OPTION_DEBUG)
+    local debugOptionName = GetString(CRAFTING_BUILD_ALERT_OPTION_DEBUG)
     local optionsTable = {
 	    {
 		    type = "header",
@@ -94,13 +94,10 @@ function AlwaysBeCrafting:CreateMenu()
 			choices = self:GetBuildNames(),
 			choicesValues = self:GetBuildIDs(),
 			getFunc = function()
-			    --local buildNames = self:GetBuildNames()
 			    if self.savedCharVariables.craftBuildID == nil then
-			        return 0 
-					--buildNames[0]
+			        return 0
 				else
 			        return self.savedCharVariables.craftBuildID
-					--buildNames[self.savedCharVariables.craftBuildID]
 				end
 		    end,
 			setFunc = function(var)
@@ -113,7 +110,7 @@ function AlwaysBeCrafting:CreateMenu()
     LibAddonMenu2:RegisterOptionControls(self.displayName, optionsTable)
 end
 
-function AlwaysBeCrafting:Info(text, ...)
+function CraftingBuildAlert:Info(text, ...)
     
 	if self.logger then
 	  self:Log(LibDebugLogger.LOG_LEVEL_INFO, text, ...)
@@ -126,7 +123,7 @@ function AlwaysBeCrafting:Info(text, ...)
 	
 end
 
-function AlwaysBeCrafting:Debug(text, ...)
+function CraftingBuildAlert:Debug(text, ...)
     
 	if self.logger == nil then
 	  return
@@ -140,7 +137,7 @@ function AlwaysBeCrafting:Debug(text, ...)
 	
 end
 
-function AlwaysBeCrafting:Warn(text, ...)
+function CraftingBuildAlert:Warn(text, ...)
     
 	if self.logger == nil then
 	  return
@@ -150,7 +147,7 @@ function AlwaysBeCrafting:Warn(text, ...)
 	
 end
 
-function AlwaysBeCrafting:Error(text, ...)
+function CraftingBuildAlert:Error(text, ...)
     
 	if self.logger == nil then
 	  return
@@ -160,7 +157,7 @@ function AlwaysBeCrafting:Error(text, ...)
 	
 end
 
-function AlwaysBeCrafting:Log(level, text, ...)
+function CraftingBuildAlert:Log(level, text, ...)
     if self.logger == nil then
 	  return
 	end
@@ -185,13 +182,13 @@ function AlwaysBeCrafting:Log(level, text, ...)
 
 end
 
-function AlwaysBeCrafting:BuildUpdate()
+function CraftingBuildAlert:BuildUpdate()
     return function(_, buildId)
         self.savedCharVariables.currentBuildID = buildId
 	end
 end
 
-function AlwaysBeCrafting:BuildRestored()
+function CraftingBuildAlert:BuildRestored()
     return function(_, result, buildId)
         if result then 
             self.savedCharVariables.currentBuildID = buildId
@@ -199,7 +196,7 @@ function AlwaysBeCrafting:BuildRestored()
 	end
 end
 
-function AlwaysBeCrafting:BuildSaved()
+function CraftingBuildAlert:BuildSaved()
     return function(_, result, buildId)
         if result then
             self.savedCharVariables.currentBuildID = buildId
@@ -207,7 +204,7 @@ function AlwaysBeCrafting:BuildSaved()
 	end
 end
 
-function AlwaysBeCrafting:CraftingStationInteract()
+function CraftingBuildAlert:CraftingStationInteract()
     return function(_, craftingType, isCraftingSameAsPrevious)
     	--if isCraftingSameAsPrevious then
             -- Don't nag when we're switching tabs at a crafting station
@@ -218,15 +215,13 @@ function AlwaysBeCrafting:CraftingStationInteract()
     	
     	if onCraftingBuild == nil then
     	    -- Don't nag if a crafting build isn't set
-    	    
     	elseif onCraftingBuild then
     	    -- Don't nag if we're on the crafting build
-    	    
     	else
     	    -- Nag if we're not on the crafting build and we've just opened a crafting station
            	local params = CENTER_SCREEN_ANNOUNCE:CreateMessageParams(CSA_CATEGORY_LARGE_TEXT, SOUNDS.ABILITY_COMPANION_ULTIMATE_READY)
            	params:SetCSAType(CENTER_SCREEN_ANNOUNCE_TYPE_SYSTEM_BROADCAST)
-           	params:SetText(GetString(ALWAYS_BE_CRAFTING_STATION_NAG))
+           	params:SetText(GetString(CRAFTING_BUILD_ALERT_STATION_NAG))
 			params:SetLifespanMS(5000)
            	CENTER_SCREEN_ANNOUNCE:AddMessageWithParams(params)
     	end
@@ -235,31 +230,29 @@ function AlwaysBeCrafting:CraftingStationInteract()
     end
 end
 
-function AlwaysBeCrafting:ZoneChanged()
+function CraftingBuildAlert:ZoneChanged()
     return function(_, _, _, _, _, _)
 	    local onCraftingBuild = self:IsOnCraftingBuild()
 		local inDungeon = self.libZone:IsInAnyDungeon()
 		
 		if onCraftingBuild == nil then
 		    -- Don't nag if a crafting build isn't set
-    	    
     	elseif onCraftingBuild and inDungeon then
     	    -- Nag if we're on the crafting build and we've just entered a dungeon
 		    local params = CENTER_SCREEN_ANNOUNCE:CreateMessageParams(CSA_CATEGORY_LARGE_TEXT, SOUNDS.DUEL_BOUNDARY_WARNING)
             params:SetCSAType(CENTER_SCREEN_ANNOUNCE_TYPE_SYSTEM_BROADCAST)
-            params:SetText(GetString(ALWAYS_BE_CRAFTING_STATION_NAG))
+            params:SetText(GetString(CRAFTING_BUILD_ALERT_STATION_NAG))
 			params:SetLifespanMS(5000)
             CENTER_SCREEN_ANNOUNCE:AddMessageWithParams(params)
 		else
-		    -- Don't nag if we're on the crafting build
-			
+		    -- Don't nag if we're not on the crafting build or not in a delve, dungeon, trial, etc.
 		end
 		
 		return
 	end
 end
 
-function AlwaysBeCrafting:OnAddOnLoaded(event, addonName)
+function CraftingBuildAlert:OnAddOnLoaded(event, addonName)
 
     if addonName ~= self.name then
         return
@@ -274,8 +267,8 @@ function AlwaysBeCrafting:OnAddOnLoaded(event, addonName)
 	    self.libZone = LibZone
 	end
 
-    self.savedVariables = ZO_SavedVars:NewAccountWide("AlwaysBeCraftingVariables", self.variablesVersion, nil, self.Default)
-	self.savedCharVariables  = ZO_SavedVars:NewCharacterIdSettings("AlwaysBeCraftingVariables", self.charVariablesVersion, nil, self.CharDefault)
+    self.savedVariables = ZO_SavedVars:NewAccountWide("CraftingBuildAlertVariables", self.variablesVersion, nil, self.Default)
+	self.savedCharVariables  = ZO_SavedVars:NewCharacterIdSettings("CraftingBuildAlertVariables", self.charVariablesVersion, nil, self.CharDefault)
 	self:CreateMenu()
 	
 	EVENT_MANAGER:RegisterForEvent(self.name, EVENT_ARMORY_BUILD_UPDATED, self:BuildUpdate())
@@ -286,10 +279,10 @@ function AlwaysBeCrafting:OnAddOnLoaded(event, addonName)
 	
 	EVENT_MANAGER:RegisterForEvent(self.name, EVENT_ZONE_CHANGED, self:ZoneChanged())
 	
-	self:Info(GetString(ALWAYS_BE_CRAFTING_LOADED))
+	self:Info(GetString(CRAFTING_BUILD_ALERT_LOADED))
 
 end
 
 
 
-EVENT_MANAGER:RegisterForEvent(AlwaysBeCrafting.name, EVENT_ADD_ON_LOADED, function(...) AlwaysBeCrafting:OnAddOnLoaded(...) end)
+EVENT_MANAGER:RegisterForEvent(CraftingBuildAlert.name, EVENT_ADD_ON_LOADED, function(...) CraftingBuildAlert:OnAddOnLoaded(...) end)

@@ -1,14 +1,14 @@
-## Title: Always Be Crafting
+## Title: Crafting Build Alert
 ## APIVersion: 101031 101032
-## Version: 0.0.1
+## Version: 1.0.0
 ## AddonVersion: 1
-## SavedVariables: AlwaysBeCraftingVariables
+## SavedVariables: CraftingBuildAlertVariables
 ## Author: mightyjo
 ## DependsOn: LibAddonMenu-2.0>=32 LibZone>=069
 ## OptionalDependsOn: LibDebugLogger>=180
 
 
-AlwaysBeCrafting.lua
+CraftingBuildAlert.lua
 
 lang/en.lua
 lang/$(language).lua
