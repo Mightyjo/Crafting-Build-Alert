@@ -1,0 +1,14 @@
+## Title: Always Be Crafting
+## APIVersion: 101031 101032
+## Version: 0.0.1
+## AddonVersion: 1
+## SavedVariables: AlwaysBeCraftingVariables
+## Author: mightyjo
+## DependsOn: LibAddonMenu-2.0>=32 LibZone>=069
+## OptionalDependsOn: LibDebugLogger>=180
+
+
+AlwaysBeCrafting.lua
+
+lang/en.lua
+lang/$(language).lua
