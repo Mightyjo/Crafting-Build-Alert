@@ -17,7 +17,7 @@ It will also remind you to switch to a clobbering build in your ESO Armory if yo
 You can turn on debug logging if you're having a problem. If you have DebugLogViewer installed you'll be able to see the add-on working in a UI window. Otherwise, the log is stored in your saved variables whenever you quit or /reloadui.
 
 # Support
-If you need help or find a bug, open an issue on the GitHub issue tracker at [https://github.com/Mightyjo/CraftingBuildAlert/issues](https://github.com/Mightyjo/CraftingBuildAlert/issues).
+If you need help or find a bug, open an issue on the GitHub issue tracker at [https://github.com/Mightyjo/Crafting-Build-Alert/issues](https://github.com/Mightyjo/Crafting-Build-Alert/issues).
 
 # Thanks
 Many thanks to the authors whose examples I followed:
