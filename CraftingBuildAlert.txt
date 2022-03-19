@@ -1,7 +1,7 @@
 ## Title: Crafting Build Alert
-## APIVersion: 101031 101032
-## Version: 1.0.0
-## AddonVersion: 1
+## APIVersion: 101032 101033
+## Version: 1.0.1
+## AddonVersion: 2
 ## SavedVariables: CraftingBuildAlertVariables
 ## Author: mightyjo
 ## DependsOn: LibAddonMenu-2.0>=32 LibZone>=069
