@@ -4,7 +4,7 @@ CraftingBuildAlert = {
     name = "CraftingBuildAlert",
     version = "1.0.3",
     logger = nil,
-	libZone = nil,
+	lastNag = nil,
 	variablesVersion = 1,
 	charVariablesVersion = 1,
 	Default = {
@@ -47,6 +47,15 @@ function CraftingBuildAlert:IsOnCraftingBuild()
     return nil
 end
 
+function CraftingBuildAlert:IsInDungeonOrDelve()
+	local player = "player"
+	local inDungeon = false
+	
+	inDungeon = IsUnitInDungeon(player) or inDungeon
+	inDungeon = (GetMapContentType() == MAP_CONTENT_DUNGEON) or inDungeon
+	
+	return inDungeon
+end
 
 function CraftingBuildAlert:CreateMenu()
 
@@ -230,34 +239,30 @@ function CraftingBuildAlert:CraftingStationInteract()
     end
 end
 
-function CraftingBuildAlert:IsInDungeonOrDelve()
-	local player = "player"
-	local inDungeon = false
-	
-	inDungeon = IsUnitInDungeon(player) or inDungeon
-	inDungeon = (GetMapContentType() == MAP_CONTENT_DUNGEON) or inDungeon
-	
-	return inDungeon
-end
+
 
 function CraftingBuildAlert:ZoneChanged()
     return function(_, _, _, _, _, _)
-		self:Debug( "ZoneChanged" )
 		local player = "player"
 	    local onCraftingBuild = self:IsOnCraftingBuild()
 		local inDungeon = self:IsInDungeonOrDelve()
-		
-		self:Debug("In Dungeon? %s", inDungeon) 
+		local now = GetGameTimeMilliseconds()
+		local minDelay = 10000
 		
 		if onCraftingBuild == nil then
 		    -- Don't nag if a crafting build isn't set
     	elseif onCraftingBuild and inDungeon then
     	    -- Nag if we're on the crafting build and we've just entered a dungeon
-		    local params = CENTER_SCREEN_ANNOUNCE:CreateMessageParams(CSA_CATEGORY_LARGE_TEXT, SOUNDS.DUEL_BOUNDARY_WARNING)
-            params:SetCSAType(CENTER_SCREEN_ANNOUNCE_TYPE_SYSTEM_BROADCAST)
-            params:SetText(GetString(CRAFTING_BUILD_ALERT_STATION_NAG))
-			params:SetLifespanMS(5000)
-            CENTER_SCREEN_ANNOUNCE:AddMessageWithParams(params)
+			if self.lastNag ~= nil and (now - self.lastNag >= minDelay) then
+				self.lastNag = now
+				local params = CENTER_SCREEN_ANNOUNCE:CreateMessageParams(CSA_CATEGORY_LARGE_TEXT, SOUNDS.DUEL_BOUNDARY_WARNING)
+				params:SetCSAType(CENTER_SCREEN_ANNOUNCE_TYPE_SYSTEM_BROADCAST)
+				params:SetText(GetString(CRAFTING_BUILD_ALERT_STATION_NAG))
+				params:SetLifespanMS(5000)
+				CENTER_SCREEN_ANNOUNCE:AddMessageWithParams(params)
+			else 
+				-- Don't nag repeatedly for similar events
+			end
 		else
 		    -- Don't nag if we're not on the crafting build or not in a delve, dungeon, trial, etc.
 		end
