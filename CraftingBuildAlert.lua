@@ -230,11 +230,21 @@ function CraftingBuildAlert:CraftingStationInteract()
     end
 end
 
+function CraftingBuildAlert:IsInDungeonOrDelve()
+	local player = "player"
+	local inDungeon = false
+	
+	inDungeon = IsUnitInDungeon(player) or inDungeon
+	inDungeon = (GetMapContentType() == MAP_CONTENT_DUNGEON) or inDungeon
+	
+	return inDungeon
+end
+
 function CraftingBuildAlert:ZoneChanged()
     return function(_, _, _, _, _, _)
 	    local onCraftingBuild = self:IsOnCraftingBuild()
 		local player = "player"
-		local inDungeon = (IsUnitInDungeon(player) or GetMapContentType() == MAP_CONTENT_DUNGEON) or false
+		local inDungeon = self:IsInDungeonOrDelve()
 		
 		if onCraftingBuild == nil then
 		    -- Don't nag if a crafting build isn't set
