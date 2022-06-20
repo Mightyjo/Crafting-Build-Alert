@@ -2,7 +2,7 @@ CraftingBuildAlert = {
     displayName = "Crafting Build Alert",
     shortName = "CBA",
     name = "CraftingBuildAlert",
-    version = "1.0.2",
+    version = "1.0.3",
     logger = nil,
 	libZone = nil,
 	variablesVersion = 1,
@@ -233,7 +233,8 @@ end
 function CraftingBuildAlert:ZoneChanged()
     return function(_, _, _, _, _, _)
 	    local onCraftingBuild = self:IsOnCraftingBuild()
-		local inDungeon = self.libZone:IsInAnyDungeon()
+		local player = "player"
+		local inDungeon = (IsUnitInDungeon(player) or GetMapContentType() == MAP_CONTENT_DUNGEON) or false
 		
 		if onCraftingBuild == nil then
 		    -- Don't nag if a crafting build isn't set
@@ -263,9 +264,9 @@ function CraftingBuildAlert:OnAddOnLoaded(event, addonName)
 	    self.logger = LibDebugLogger(self.name)
 	end
 	
-	if LibZone then
-	    self.libZone = LibZone
-	end
+	--if LibZone then
+	--    self.libZone = LibZone
+	--end
 
     self.savedVariables = ZO_SavedVars:NewAccountWide("CraftingBuildAlertVariables", self.variablesVersion, nil, self.Default)
 	self.savedCharVariables  = ZO_SavedVars:NewCharacterIdSettings("CraftingBuildAlertVariables", self.charVariablesVersion, nil, self.CharDefault)

@@ -1,5 +1,8 @@
 Change Log
 
+v1.0.3
+Fix - Quiet exessive crafting build alerts in overworld.
+
 v1.0.2
 Chore - Track ESO API version updates.
 
