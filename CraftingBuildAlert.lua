@@ -288,6 +288,8 @@ function CraftingBuildAlert:OnAddOnLoaded(event, addonName)
 	EVENT_MANAGER:RegisterForEvent(self.name, EVENT_CRAFTING_STATION_INTERACT, self:CraftingStationInteract())
 	
 	EVENT_MANAGER:RegisterForEvent(self.name, EVENT_ZONE_CHANGED, self:ZoneChanged())
+	EVENT_MANAGER:RegisterForEvent(self.name, EVENT_CURRENT_SUBZONE_LIST_CHANGED, self:ZoneChanged())
+	EVENT_MANAGER:RegisterForEvent(self.name, EVENT_LINKED_WORLD_POSITION_CHANGED, self:ZoneChanged())
 	
 	self:Info(GetString(CRAFTING_BUILD_ALERT_LOADED))
 
