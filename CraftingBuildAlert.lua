@@ -246,6 +246,8 @@ function CraftingBuildAlert:ZoneChanged()
 		local player = "player"
 		local inDungeon = self:IsInDungeonOrDelve()
 		
+		self:Debug("[%s]: ZoneChanged (Dungeon? %s) (", self.name, inDungeon) 
+		
 		if onCraftingBuild == nil then
 		    -- Don't nag if a crafting build isn't set
     	elseif onCraftingBuild and inDungeon then
