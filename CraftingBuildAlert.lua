@@ -253,7 +253,7 @@ function CraftingBuildAlert:ZoneChanged()
 		    -- Don't nag if a crafting build isn't set
     	elseif onCraftingBuild and inDungeon then
     	    -- Nag if we're on the crafting build and we've just entered a dungeon
-			if self.lastNag ~= nil and (now - self.lastNag >= minDelay) then
+			if (self.lastNag == nil) or ((self.lastNag ~= nil) and (now - self.lastNag >= minDelay)) then
 				self.lastNag = now
 				local params = CENTER_SCREEN_ANNOUNCE:CreateMessageParams(CSA_CATEGORY_LARGE_TEXT, SOUNDS.DUEL_BOUNDARY_WARNING)
 				params:SetCSAType(CENTER_SCREEN_ANNOUNCE_TYPE_SYSTEM_BROADCAST)
