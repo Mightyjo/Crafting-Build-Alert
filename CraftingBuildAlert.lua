@@ -2,17 +2,18 @@ CraftingBuildAlert = {
     displayName = "Crafting Build Alert",
     shortName = "CBA",
     name = "CraftingBuildAlert",
-    version = "1.0.3",
+    version = "1.1.0",
     logger = nil,
 	lastNag = nil,
 	variablesVersion = 1,
-	charVariablesVersion = 1,
+	charVariablesVersion = 2,
 	Default = {
 	  isDebug = false,
 	},
 	CharDefault = {
 	  craftBuildID = 0,
 	  currentBuildID = 0,
+	  doWorldAlerts = true,
 	},
 }
 
@@ -71,6 +72,7 @@ function CraftingBuildAlert:CreateMenu()
     LibAddonMenu2:RegisterAddonPanel(self.displayName, panelData)
     
     local debugOptionName = GetString(CRAFTING_BUILD_ALERT_OPTION_DEBUG)
+	local worldAlertsOptionName = GetString(CRAFTING_BUILD_ALERT_OPTION_WORLD_ALERT)
     local optionsTable = {
 	    {
 		    type = "header",
@@ -115,6 +117,18 @@ function CraftingBuildAlert:CreateMenu()
 			default = 0,
 			width = "full",
 		},
+		 {
+            type = "checkbox",
+            name = worldAlertsOptionName,
+            getFunc = function()
+                return self.savedCharVariables.doWorldAlerts
+            end,
+            setFunc = function(value)
+                self.savedCharVariables.doWorldAlerts = value
+            end,
+            width = "full",
+            default = true,
+        },
     }
     LibAddonMenu2:RegisterOptionControls(self.displayName, optionsTable)
 end
@@ -245,7 +259,11 @@ function CraftingBuildAlert:ZoneChanged()
     return function(_, _, _, _, _, _)
 		local now = GetGameTimeMilliseconds()
 		local minDelay = 10000
-				
+		
+		if not self.savedCharVariables.doWorldAlerts then
+			return
+		end
+		
 		--[[ The LUA engine is single-threaded, so even though several events can fire this handler
 			 at once, one of them will get to finish and set lastNag so the others can bail out early.
 		]]
@@ -289,7 +307,13 @@ function CraftingBuildAlert:OnAddOnLoaded(event, addonName)
 	end
 
     self.savedVariables = ZO_SavedVars:NewAccountWide("CraftingBuildAlertVariables", self.variablesVersion, nil, self.Default)
-	self.savedCharVariables  = ZO_SavedVars:NewCharacterIdSettings("CraftingBuildAlertVariables", self.charVariablesVersion, nil, self.CharDefault)
+	local savedCharVariables_old = ZO_SavedVars:NewCharacterIdSettings("CraftingBuildAlertVariables", self.charVariablesVersion-1, nil, self.CharDefault)
+	local upgradedCharVariables = {
+		craftBuildID = savedCharVariables_old.craftBuildID,
+		currentBuildID = savedCharVariables_old.currentBuildID,
+		doWorldAlerts = savedCharVariables_old.doWorldAlerts,
+	}
+	self.savedCharVariables  = ZO_SavedVars:NewCharacterIdSettings("CraftingBuildAlertVariables", self.charVariablesVersion, nil, upgradedCharVariables)
 	self:CreateMenu()
 	
 	EVENT_MANAGER:RegisterForEvent(self.name, EVENT_ARMORY_BUILD_UPDATED, self:BuildUpdate())
