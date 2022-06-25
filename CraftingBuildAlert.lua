@@ -6,6 +6,7 @@ CraftingBuildAlert = {
     logger = nil,
 	lastNag = nil,
 	libZone = nil,
+	lastZoneName = nil,
 	variablesVersion = 1,
 	charVariablesVersion = 2,
 	Default = {
@@ -77,6 +78,18 @@ function CraftingBuildAlert:IsInDungeonOrRaid()
 	
 	
 	return inDungeon
+end
+
+function CraftingBuildAlert:GetCurrentZoneName()
+	local currentZoneId, currentZoneIndex
+	if self.libZone ~= nil then
+		currentZoneId, _, currentZoneIndex, _, _, _ = self.libZone:GetCurrentZoneIds()
+	else
+		currentZoneIndex = GetCurrentZoneIndex()
+		currentZoneId = GetZoneId(currentZoneIndex())
+	end
+	
+	return GetZoneNameById(currentZoneId)
 end
 
 function CraftingBuildAlert:CreateMenu()
@@ -280,7 +293,18 @@ function CraftingBuildAlert:ZoneChanged()
     return function(_, _, _, _, _, _)
 		local now = GetGameTimeMilliseconds()
 		local minDelay = 10000
+		local currentZoneName = self:GetCurrentZoneName()
 		
+		-- Don't nag more than once for a zone
+		-- Ensure chance to nag for a new zone
+		if self.lastZoneName == currentZoneName then
+			return
+		else
+			self.lastZoneName = currentZoneName
+			self.lastNag = nil
+		end
+			
+		-- Don't nag if the user doesn't want this feature
 		if not self.savedCharVariables.doWorldAlerts then
 			return
 		end
