@@ -66,7 +66,7 @@ function CraftingBuildAlert:IsInDungeonOrRaid()
 		inDungeon = IsPlayerInRaid() or inDungeon
 		
 	else
-		local isInPVP, isInDelve, isInPublicDungeon, isInGroupDungeon, isInRaid, isInGroup, groupSize = self.libZone.getCurrentZoneAndGroupStatus()
+		local isInPVP, isInDelve, isInPublicDungeon, isInGroupDungeon, isInRaid, isInGroup, groupSize = self.libZone:GetCurrentZoneAndGroupStatus()
 		
 		inDungeon = isInGroupDungeon or inDungeon
 		inDungeon = isInPublicDungeon or inDungeon
