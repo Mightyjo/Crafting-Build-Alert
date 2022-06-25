@@ -2,7 +2,7 @@ CraftingBuildAlert = {
     displayName = "Crafting Build Alert",
     shortName = "CBA",
     name = "CraftingBuildAlert",
-    version = "1.1.0",
+    version = "1.1.1",
     logger = nil,
 	lastNag = nil,
 	variablesVersion = 1,
@@ -53,7 +53,7 @@ function CraftingBuildAlert:IsInDungeonOrDelve()
 	local inDungeon = false
 	
 	inDungeon = IsUnitInDungeon(player) or inDungeon
-	inDungeon = (GetMapContentType() == MAP_CONTENT_DUNGEON) or inDungeon
+	-- inDungeon = (GetMapContentType() == MAP_CONTENT_DUNGEON) or inDungeon
 	
 	return inDungeon
 end

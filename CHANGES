@@ -1,5 +1,8 @@
 Change Log
 
+v1.1.1
+Fix - Quiet additional exessive crafting build alerts in overworld. 
+
 v1.1.0
 Feature - Add option to disable alerts on zone changes. 
 		!Back up your saved variables! Updated saved character variables. 
