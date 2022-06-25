@@ -5,7 +5,7 @@
 ## SavedVariables: CraftingBuildAlertVariables
 ## Author: mightyjo
 ## DependsOn: LibAddonMenu-2.0>=32
-## OptionalDependsOn: LibDebugLogger>=180
+## OptionalDependsOn: LibDebugLogger>=180 LibZone>=077
 
 
 CraftingBuildAlert.lua

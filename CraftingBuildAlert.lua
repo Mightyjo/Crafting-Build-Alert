@@ -5,6 +5,7 @@ CraftingBuildAlert = {
     version = "1.1.1",
     logger = nil,
 	lastNag = nil,
+	libZone = nil,
 	variablesVersion = 1,
 	charVariablesVersion = 2,
 	Default = {
@@ -48,12 +49,32 @@ function CraftingBuildAlert:IsOnCraftingBuild()
     return nil
 end
 
-function CraftingBuildAlert:IsInDungeonOrDelve()
+function CraftingBuildAlert:IsInDungeonOrRaid()
 	local player = "player"
 	local inDungeon = false
 	
-	inDungeon = IsUnitInDungeon(player) or inDungeon
-	-- inDungeon = (GetMapContentType() == MAP_CONTENT_DUNGEON) or inDungeon
+	if self.libZone == nil then
+		--[[ Order matters for the next three statements.
+		     The first two check the map type with OR.
+			 The third ANDs the the type with the difficulty to identify group dungeons.
+		]]
+		inDungeon = IsUnitInDungeon(player) or inDungeon
+		inDungeon = (GetMapContentType() == MAP_CONTENT_DUNGEON) or inDungeon
+		inDungeon = (ZO_WorldMap_GetMapDungeonDifficulty() > DUNGEON_DIFFICULTY_NONE) and inDungeon
+		-- Can't check for public dungeons without LibZone
+		-- Don't care if player is in a delve
+		inDungeon = IsPlayerInRaid() or inDungeon
+		
+	else
+		local isInPVP, isInDelve, isInPublicDungeon, isInGroupDungeon, isInRaid, isInGroup, groupSize = self.libZone:getCurrentZoneAndGroupStatus()
+		
+		inDungeon = isInGroupDungeon or inDungeon
+		inDungeon = isInPublicDungeon or inDungeon
+		-- Don't care if player is in a delve
+		inDungeon = isInRaid or inDungeon
+	end
+	
+	
 	
 	return inDungeon
 end
@@ -270,9 +291,8 @@ function CraftingBuildAlert:ZoneChanged()
 		if (self.lastNag == nil) or ((self.lastNag ~= nil) and (now - self.lastNag >= minDelay)) then
 			self.lastNag = now
 		
-			local player = "player"
 			local onCraftingBuild = self:IsOnCraftingBuild()
-			local inDungeon = self:IsInDungeonOrDelve()
+			local inDungeon = self:IsInDungeonOrRaid()
 
 			if onCraftingBuild == nil then
 				-- Don't nag if a crafting build isn't set
@@ -285,7 +305,7 @@ function CraftingBuildAlert:ZoneChanged()
 				CENTER_SCREEN_ANNOUNCE:AddMessageWithParams(params)
 				
 			else
-				-- Don't nag if we're not on the crafting build or not in a delve, dungeon, trial, etc.
+				-- Don't nag if we're not on the crafting build or not in a dungeon, trial, etc.
 			end
 		else 
 				-- Don't nag repeatedly for similar events
@@ -304,6 +324,10 @@ function CraftingBuildAlert:OnAddOnLoaded(event, addonName)
     
 	if LibDebugLogger then
 	    self.logger = LibDebugLogger(self.name)
+	end
+	
+	if LibZone then
+		self.libZone = LibZone
 	end
 
     self.savedVariables = ZO_SavedVars:NewAccountWide("CraftingBuildAlertVariables", self.variablesVersion, nil, self.Default)
