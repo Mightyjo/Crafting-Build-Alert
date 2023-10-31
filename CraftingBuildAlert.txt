@@ -1,5 +1,5 @@
 ## Title: Crafting Build Alert
-## APIVersion: 101037 101038
+## APIVersion: 101039 101040
 ## Version: 1.1.1
 ## AddonVersion: 6
 ## SavedVariables: CraftingBuildAlertVariables
