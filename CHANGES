@@ -1,5 +1,21 @@
 Change Log
 
+v1.2.0
+Fix - Quiet alerts when using Scribing stations/NPCs
+Chore - Track ESO API version updates.
+
+v1.1.5
+Chore - Track ESO API version updates.
+
+v1.1.4
+Chore - Track ESO API version updates.
+
+v1.1.3
+Chore - Track ESO API version updates.
+
+v1.1.2
+Chore - Track ESO API version updates.
+
 v1.1.1
 Fix - Quiet additional exessive crafting build alerts in overworld. 
 

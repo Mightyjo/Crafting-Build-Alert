@@ -2,7 +2,7 @@ CraftingBuildAlert = {
     displayName = "Crafting Build Alert",
     shortName = "CBA",
     name = "CraftingBuildAlert",
-    version = "1.1.1",
+    version = "1.2.0",
     logger = nil,
 	lastNag = nil,
 	libZone = nil,
@@ -274,6 +274,8 @@ function CraftingBuildAlert:CraftingStationInteract()
     	    -- Don't nag if a crafting build isn't set
     	elseif onCraftingBuild then
     	    -- Don't nag if we're on the crafting build
+		elseif craftingType == CRAFTING_TYPE_SCRIBING then
+		    -- Don't nag for scribing (while it's not on the champion tree)
     	else
     	    -- Nag if we're not on the crafting build and we've just opened a crafting station
            	local params = CENTER_SCREEN_ANNOUNCE:CreateMessageParams(CSA_CATEGORY_LARGE_TEXT, SOUNDS.ABILITY_COMPANION_ULTIMATE_READY)
